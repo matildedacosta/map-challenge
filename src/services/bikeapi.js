@@ -11,8 +11,8 @@ class BikeService {
     return this.api.get();
   };
 
-  getStations = (networkId) => {
-    return this.api.get(`/${networkId}`);
+  getStations = (id) => {
+    return this.api.get(`/${id}`);
   };
 }
 
