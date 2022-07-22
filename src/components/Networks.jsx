@@ -1,38 +1,29 @@
 import React, { useState } from "react";
-import {
-  Marker,
-  MarkerClusterer,
-  InfoBox,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 
 function Networks(props) {
   const {
     networks,
-    showStations,
-    showNetworks,
     handleOnClick,
     setNetworkId,
     setShowStations,
     setShowNetworks,
+    setOneNetwork,
+    oneNetwork,
+    networkId,
   } = props;
-  
+
   const [clicked, setClicked] = useState(false);
 
-  /*   const onLoad = (infoWindow) => {
-    console.log("infoWindow: ", infoWindow);
-  }; */
-
-  const handleInfoView = () => {
+  /*  const handleInfoView = (network) => {
     setClicked(true);
+    setNetworkId(network.id);
   };
-
+ */
   const handleExploreStations = (network) => {
     setNetworkId(network.id);
     setShowStations(true);
     setShowNetworks(false);
-    console.log(showStations);
-    console.log(showNetworks);
   };
 
   return (
@@ -42,8 +33,9 @@ function Networks(props) {
           <div key={network.id}>
             <Marker
               onClick={() => {
-                handleInfoView();
                 handleOnClick(network.id);
+                setClicked(true);
+                setOneNetwork(network);
               }}
               position={{
                 lat: network.location.latitude,

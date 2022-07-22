@@ -19,7 +19,7 @@ const MapsCSS = styled.main`
 
   .map-marker {
     margin-bottom: 3rem;
-    background-color: white;
+    background-color: #fff;
     border-radius: 10%;
     padding: 0.2rem;
   }
@@ -33,7 +33,6 @@ function MapPage() {
 
   const [networks, setNetworks] = useState([]);
   const [oneNetwork, setOneNetwork] = useState([]);
-  const [markers, setMarkers] = useState([]);
   const [stations, setStations] = useState([]);
 
   const [networkId, setNetworkId] = useState("");
@@ -51,7 +50,6 @@ function MapPage() {
       let response = await bikeService.getNetworks();
       setNetworks(response.data.networks);
       setShowNetworks(true);
-      //console.log(response.data.networks);
     } catch (error) {
       alert(error);
       console.log(error);
@@ -79,8 +77,6 @@ function MapPage() {
       let response = await bikeService.getStations(id);
       setOneNetwork(response.data.network);
       setStations(response.data.network.stations);
-      //console.log(response.data.network.stations);
-      //console.log(`clicked on ${response.data.network.id}`);
     } catch (error) {
       alert(error);
       console.log(error);
@@ -100,17 +96,6 @@ function MapPage() {
 
   const handleOnClick = async (id) => {
     await getAllStations(id);
-    /* return stations.map((station) => {
-      console.log(station);
-      return (
-        <Marker
-          position={{
-            lat: station.latitude,
-            lng: station.longitude,
-          }}
-        />
-      );
-    }); */
   };
 
   return (
@@ -122,7 +107,7 @@ function MapPage() {
             setShowNetworks(true);
           }}
         >
-          Back
+          See Networks
         </button>
       )}
       {isLoaded ? (
@@ -138,8 +123,8 @@ function MapPage() {
               setShowStations={setShowStations}
               setShowNetworks={setShowNetworks}
               handleOnClick={handleOnClick}
-              showStations={showStations}
-              showNetworks={showNetworks}
+              setOneNetwork={setOneNetwork}
+              networkId={networkId}
             />
           )}
           {showStations && <Stations stations={stations} />}

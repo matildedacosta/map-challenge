@@ -12,9 +12,10 @@ function Stations(props) {
   return (
     <div>
       {stations.map((station) => {
-        console.log(station);
+        //console.log(station);
         return (
           <Marker
+            key={station.id}
             onClick={() => {
               handleInfoView();
             }}
@@ -31,7 +32,14 @@ function Stations(props) {
                 }}
               >
                 <div>
-                  <h6>{station.name}</h6>
+                  <h4>{station.name}</h4>
+                  <p>
+                    <b>Free bikes: </b>
+                    {station.free_bikes}
+                    <br />
+                    <b>Empty slots: </b>
+                    {station.empty_slots}
+                  </p>
                 </div>
               </InfoWindow>
             )}
