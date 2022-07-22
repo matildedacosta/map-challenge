@@ -139,6 +139,7 @@ function MapPage() {
               setShowNetworks={setShowNetworks}
               handleOnClick={handleOnClick}
               showStations={showStations}
+              showNetworks={showNetworks}
             />
           )}
           {showStations && <Stations stations={stations} />}

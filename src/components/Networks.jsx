@@ -10,6 +10,7 @@ function Networks(props) {
   const {
     networks,
     showStations,
+    showNetworks,
     handleOnClick,
     setNetworkId,
     setShowStations,
@@ -30,6 +31,7 @@ function Networks(props) {
     setShowStations(true);
     setShowNetworks(false);
     console.log(showStations);
+    console.log(showNetworks);
   };
 
   return (
@@ -40,6 +42,7 @@ function Networks(props) {
             <Marker
               onClick={() => {
                 handleInfoView();
+                handleOnClick(network.id);
               }}
               position={{
                 lat: network.location.latitude,
