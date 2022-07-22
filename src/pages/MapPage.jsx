@@ -100,7 +100,7 @@ function MapPage() {
 
   const handleOnClick = async (id) => {
     await getAllStations(id);
-    return stations.map((station) => {
+    /* return stations.map((station) => {
       console.log(station);
       return (
         <Marker
@@ -110,7 +110,7 @@ function MapPage() {
           }}
         />
       );
-    });
+    }); */
   };
 
   return (
@@ -121,14 +121,27 @@ function MapPage() {
           center={position}
           zoom={zoom}
         >
+          {showStations && (
+            <button
+              onClick={() => {
+                setShowStations(false);
+                setShowNetworks(true);
+              }}
+            >
+              Back
+            </button>
+          )}
           {showNetworks && (
             <Networks
               networks={networks}
               setNetworkId={setNetworkId}
               setShowStations={setShowStations}
               setShowNetworks={setShowNetworks}
+              handleOnClick={handleOnClick}
+              showStations={showStations}
             />
           )}
+          {showStations && <Stations stations={stations} />}
         </GoogleMap>
       ) : (
         <>

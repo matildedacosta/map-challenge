@@ -1,8 +1,36 @@
-import React from "react";
-import { Marker, MarkerClusterer, InfoBox } from "@react-google-maps/api";
+import React, { useState } from "react";
+import {
+  Marker,
+  MarkerClusterer,
+  InfoBox,
+  InfoWindow,
+} from "@react-google-maps/api";
 
 function Networks(props) {
-  const { networks, handleOnClick, setNetworkId } = props;
+  const {
+    networks,
+    showStations,
+    handleOnClick,
+    setNetworkId,
+    setShowStations,
+    setShowNetworks,
+  } = props;
+  const [clicked, setClicked] = useState(false);
+
+  /*   const onLoad = (infoWindow) => {
+    console.log("infoWindow: ", infoWindow);
+  }; */
+
+  const handleInfoView = () => {
+    setClicked(true);
+  };
+
+  const handleExploreStations = (network) => {
+    setNetworkId(network.id);
+    setShowStations(true);
+    setShowNetworks(false);
+    console.log(showStations);
+  };
 
   return (
     <>
@@ -11,7 +39,7 @@ function Networks(props) {
           <div key={network.id}>
             <Marker
               onClick={() => {
-                handleOnClick(network.id);
+                handleInfoView();
               }}
               position={{
                 lat: network.location.latitude,
@@ -23,7 +51,27 @@ function Networks(props) {
                   className: "map-marker",
                 },
               }}
-            />
+            >
+              {clicked && (
+                <InfoWindow
+                  position={{
+                    lat: network.location.latitude,
+                    lng: network.location.longitude,
+                  }}
+                >
+                  <div>
+                    <h6>{network.name}</h6>
+                    <button
+                      onClick={() => {
+                        handleExploreStations(network);
+                      }}
+                    >
+                      Explore stations
+                    </button>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
           </div>
         );
       })}
