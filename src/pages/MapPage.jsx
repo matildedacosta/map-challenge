@@ -22,12 +22,15 @@ const MapsCSS = styled.main`
   }
 `;
 
-function Map() {
+function MapPage() {
   const [zoom, setZoom] = useState(5);
   const [position, setPosition] = useState({ lat: 38.732716, lng: -9.151577 });
+
+  const [countries, setCountries] = useState([]);
+
   const [networks, setNetworks] = useState([]);
   const [oneNetwork, setOneNetwork] = useState([]);
-  const [markers, setMarkers] = useState({});
+  const [markers, setMarkers] = useState([]);
   const [stations, setStations] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
@@ -46,6 +49,22 @@ function Map() {
     }
   };
 
+  const createClusters = (response) => {
+    const countries = {};
+    response.forEach((network) => {
+      const { country } = network.location;
+      if (!countries[network.location.country]) {
+        countries[country] = {
+          code: country,
+          networks: [network],
+        };
+      } else {
+        countries[country].networks = [...countries[country].networks, network];
+      }
+    });
+    return Object.values(countries);
+  };
+
   const getAllStations = async (id) => {
     try {
       let response = await bikeService.getStations(id);
@@ -60,7 +79,13 @@ function Map() {
   };
 
   useEffect(() => {
-    getAllNetworks();
+    const initialize = async () => {
+      const response = await getAllNetworks();
+      setCountries(createClusters(response));
+    };
+
+    initialize();
+    //getAllNetworks();
   }, []);
 
   const handleOnClick = async (id) => {
@@ -117,4 +142,4 @@ function Map() {
   );
 }
 
-export default Map;
+export default MapPage;
