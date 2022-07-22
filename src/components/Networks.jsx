@@ -16,6 +16,7 @@ function Networks(props) {
     setShowStations,
     setShowNetworks,
   } = props;
+  
   const [clicked, setClicked] = useState(false);
 
   /*   const onLoad = (infoWindow) => {

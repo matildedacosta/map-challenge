@@ -115,22 +115,22 @@ function MapPage() {
 
   return (
     <MapsCSS>
+      {showStations && (
+        <button
+          onClick={() => {
+            setShowStations(false);
+            setShowNetworks(true);
+          }}
+        >
+          Back
+        </button>
+      )}
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={{ width: "100vw", height: "100vh" }}
           center={position}
           zoom={zoom}
         >
-          {showStations && (
-            <button
-              onClick={() => {
-                setShowStations(false);
-                setShowNetworks(true);
-              }}
-            >
-              Back
-            </button>
-          )}
           {showNetworks && (
             <Networks
               networks={networks}
