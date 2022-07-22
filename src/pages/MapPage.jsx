@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import bikeService from "../services/bikeapi";
 
+import Networks from "../components/Networks";
+import Stations from "../components/Stations";
+
 import {
   GoogleMap,
   useJsApiLoader,
@@ -33,6 +36,11 @@ function MapPage() {
   const [markers, setMarkers] = useState([]);
   const [stations, setStations] = useState([]);
 
+  const [networkId, setNetworkId] = useState("");
+
+  const [showNetworks, setShowNetworks] = useState(false);
+  const [showStations, setShowStations] = useState(false);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_API_KEY}`,
@@ -42,6 +50,7 @@ function MapPage() {
     try {
       let response = await bikeService.getNetworks();
       setNetworks(response.data.networks);
+      setShowNetworks(true);
       //console.log(response.data.networks);
     } catch (error) {
       alert(error);
@@ -49,7 +58,7 @@ function MapPage() {
     }
   };
 
-  const createClusters = (response) => {
+  /*   const createClusters = (response) => {
     const countries = {};
     response.forEach((network) => {
       const { country } = network.location;
@@ -64,7 +73,7 @@ function MapPage() {
     });
     return Object.values(countries);
   };
-
+ */
   const getAllStations = async (id) => {
     try {
       let response = await bikeService.getStations(id);
@@ -79,13 +88,14 @@ function MapPage() {
   };
 
   useEffect(() => {
-    const initialize = async () => {
+    /*  const initialize = async () => {
       const response = await getAllNetworks();
       setCountries(createClusters(response));
+      console.log(response);
     };
 
-    initialize();
-    //getAllNetworks();
+    initialize(); */
+    getAllNetworks();
   }, []);
 
   const handleOnClick = async (id) => {
@@ -111,27 +121,14 @@ function MapPage() {
           center={position}
           zoom={zoom}
         >
-          {networks.map((network) => {
-            return (
-              <div key={network.id}>
-                <Marker
-                  onClick={() => {
-                    handleOnClick(network.id);
-                  }}
-                  position={{
-                    lat: network.location.latitude,
-                    lng: network.location.longitude,
-                  }}
-                  options={{
-                    label: {
-                      text: `${network.name}`,
-                      className: "map-marker",
-                    },
-                  }}
-                />
-              </div>
-            );
-          })}
+          {showNetworks && (
+            <Networks
+              networks={networks}
+              setNetworkId={setNetworkId}
+              setShowStations={setShowStations}
+              setShowNetworks={setShowNetworks}
+            />
+          )}
         </GoogleMap>
       ) : (
         <>
