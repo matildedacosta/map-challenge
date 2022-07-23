@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+
 import styled from "styled-components";
+import bgPic from "../assets/pictures/bikebg.jpg";
+
 import bikeService from "../services/bikeapi";
 
 import Networks from "../components/Networks";
@@ -10,41 +13,71 @@ import {
   useJsApiLoader,
   Marker,
   MarkerClusterer,
-  InfoBox,
 } from "@react-google-maps/api";
 
 const MapsCSS = styled.main`
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url("${bgPic}");
+  background-repeat: no-repeat;
+  background-size: cover;
 
-  .map-marker {
-    margin-bottom: 3rem;
-    background-color: #fff;
-    border-radius: 10%;
-    padding: 0.2rem;
+  h1 {
+    margin: 2rem 0 1rem;
+    color: blue;
+    font-size: 3rem;
+  }
+
+  .button {
+    margin: 1rem;
+    border-radius: 5px;
+    padding: 0.4rem;
+    background-color: green;
+    color: white;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .button:hover {
+    background-color: blue;
+    color: white;
   }
 `;
 
 function MapPage() {
+  //INFORMATION RELATED TO MAP
   const [zoom, setZoom] = useState(5);
-  const [position, setPosition] = useState({ lat: 38.732716, lng: -9.151577 });
+  //const [position, setPosition] = useState({ lat: 38.732716, lng: -9.151577 });
+  const position = { lat: 38.732716, lng: -9.151577 };
 
+  //SAVING INFORMATION FROM API
   const [countries, setCountries] = useState([]);
-
   const [networks, setNetworks] = useState([]);
   const [oneNetwork, setOneNetwork] = useState([]);
   const [stations, setStations] = useState([]);
 
   const [networkId, setNetworkId] = useState("");
 
+  //TOGGLE FOR DIFFERENT LAYERS
   const [showNetworks, setShowNetworks] = useState(false);
   const [showStations, setShowStations] = useState(false);
 
+  //MAP
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_API_KEY}`,
   });
 
+  //NETWORKS
   const getAllNetworks = async () => {
     try {
       let response = await bikeService.getNetworks();
@@ -56,22 +89,11 @@ function MapPage() {
     }
   };
 
-  /*   const createClusters = (response) => {
-    const countries = {};
-    response.forEach((network) => {
-      const { country } = network.location;
-      if (!countries[network.location.country]) {
-        countries[country] = {
-          code: country,
-          networks: [network],
-        };
-      } else {
-        countries[country].networks = [...countries[country].networks, network];
-      }
-    });
-    return Object.values(countries);
-  };
- */
+  useEffect(() => {
+    getAllNetworks();
+  }, []);
+
+  //STATIONS
   const getAllStations = async (id) => {
     try {
       let response = await bikeService.getStations(id);
@@ -83,28 +105,24 @@ function MapPage() {
     }
   };
 
-  useEffect(() => {
-    /*  const initialize = async () => {
-      const response = await getAllNetworks();
-      setCountries(createClusters(response));
-      console.log(response);
-    };
-
-    initialize(); */
-    getAllNetworks();
-  }, []);
-
-  const handleOnClick = async (id) => {
+  const handleExploreStations = async (id) => {
+    //setNetworkId(network.id);
+    setShowStations(true);
+    setShowNetworks(false);
     await getAllStations(id);
   };
 
+  //DISPLAYING THE MAP
   return (
     <MapsCSS>
+      <h1>Welcome to the Bike Map</h1>
       {showStations && (
         <button
+          className="button"
           onClick={() => {
             setShowStations(false);
             setShowNetworks(true);
+            setZoom(5);
           }}
         >
           See Networks
@@ -112,19 +130,19 @@ function MapPage() {
       )}
       {isLoaded ? (
         <GoogleMap
-          mapContainerStyle={{ width: "100vw", height: "100vh" }}
+          mapContainerStyle={{
+            width: "70vw",
+            height: "70vh",
+            border: "1px solid blue",
+          }}
           center={position}
           zoom={zoom}
         >
           {showNetworks && (
             <Networks
               networks={networks}
-              setNetworkId={setNetworkId}
-              setShowStations={setShowStations}
-              setShowNetworks={setShowNetworks}
-              handleOnClick={handleOnClick}
-              setOneNetwork={setOneNetwork}
-              networkId={networkId}
+              handleExploreStations={handleExploreStations}
+              setZoom={setZoom}
             />
           )}
           {showStations && <Stations stations={stations} />}

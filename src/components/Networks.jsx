@@ -2,29 +2,9 @@ import React, { useState } from "react";
 import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 
 function Networks(props) {
-  const {
-    networks,
-    handleOnClick,
-    setNetworkId,
-    setShowStations,
-    setShowNetworks,
-    setOneNetwork,
-    oneNetwork,
-    networkId,
-  } = props;
+  const { networks, handleExploreStations, setZoom } = props;
 
   const [clicked, setClicked] = useState(false);
-
-  /*  const handleInfoView = (network) => {
-    setClicked(true);
-    setNetworkId(network.id);
-  };
- */
-  const handleExploreStations = (network) => {
-    setNetworkId(network.id);
-    setShowStations(true);
-    setShowNetworks(false);
-  };
 
   return (
     <>
@@ -33,19 +13,11 @@ function Networks(props) {
           <div key={network.id}>
             <Marker
               onClick={() => {
-                handleOnClick(network.id);
                 setClicked(true);
-                setOneNetwork(network);
               }}
               position={{
                 lat: network.location.latitude,
                 lng: network.location.longitude,
-              }}
-              options={{
-                label: {
-                  text: `${network.name}`,
-                  className: "map-marker",
-                },
               }}
             >
               {clicked && (
@@ -56,10 +28,13 @@ function Networks(props) {
                   }}
                 >
                   <div>
-                    <h6>{network.name}</h6>
+                    <h4>
+                      <i>Network</i> {network.name}
+                    </h4>
                     <button
                       onClick={() => {
-                        handleExploreStations(network);
+                        handleExploreStations(network.id);
+                        setZoom(8);
                       }}
                     >
                       Explore stations

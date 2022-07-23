@@ -12,7 +12,6 @@ function Stations(props) {
   return (
     <div>
       {stations.map((station) => {
-        //console.log(station);
         return (
           <Marker
             key={station.id}
