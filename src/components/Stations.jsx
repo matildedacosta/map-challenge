@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Marker, InfoWindow } from "@react-google-maps/api";
+import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 
 function Stations(props) {
   const { stations } = props;

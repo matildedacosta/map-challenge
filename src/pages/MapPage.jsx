@@ -8,12 +8,7 @@ import bikeService from "../services/bikeapi";
 import Networks from "../components/Networks";
 import Stations from "../components/Stations";
 
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  MarkerClusterer,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 const MapsCSS = styled.main`
   * {
@@ -54,30 +49,25 @@ const MapsCSS = styled.main`
 `;
 
 function MapPage() {
+  /* STATES */
   //INFORMATION RELATED TO MAP
   const [zoom, setZoom] = useState(5);
-  //const [position, setPosition] = useState({ lat: 38.732716, lng: -9.151577 });
   const position = { lat: 38.732716, lng: -9.151577 };
-
   //SAVING INFORMATION FROM API
   const [countries, setCountries] = useState([]);
   const [networks, setNetworks] = useState([]);
-  const [oneNetwork, setOneNetwork] = useState([]);
   const [stations, setStations] = useState([]);
-
-  const [networkId, setNetworkId] = useState("");
-
   //TOGGLE FOR DIFFERENT LAYERS
   const [showNetworks, setShowNetworks] = useState(false);
   const [showStations, setShowStations] = useState(false);
 
-  //MAP
+  /* MAP */
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_API_KEY}`,
   });
 
-  //NETWORKS
+  /* NETWORKS */
   const getAllNetworks = async () => {
     try {
       let response = await bikeService.getNetworks();
@@ -93,11 +83,10 @@ function MapPage() {
     getAllNetworks();
   }, []);
 
-  //STATIONS
+  /* STATIONS */
   const getAllStations = async (id) => {
     try {
       let response = await bikeService.getStations(id);
-      setOneNetwork(response.data.network);
       setStations(response.data.network.stations);
     } catch (error) {
       alert(error);
@@ -106,13 +95,11 @@ function MapPage() {
   };
 
   const handleExploreStations = async (id) => {
-    //setNetworkId(network.id);
     setShowStations(true);
     setShowNetworks(false);
     await getAllStations(id);
   };
 
-  //DISPLAYING THE MAP
   return (
     <MapsCSS>
       <h1>Welcome to the Bike Map</h1>
