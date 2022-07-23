@@ -52,7 +52,7 @@ function MapPage() {
   /* STATES */
   //INFORMATION RELATED TO MAP
   const [zoom, setZoom] = useState(5);
-  const position = { lat: 38.732716, lng: -9.151577 };
+  const [center, setCenter] = useState({ lat: 38.732716, lng: -9.151577 });
   //SAVING INFORMATION FROM API
   const [countries, setCountries] = useState([]);
   const [networks, setNetworks] = useState([]);
@@ -122,7 +122,7 @@ function MapPage() {
             height: "70vh",
             border: "1px solid blue",
           }}
-          center={position}
+          center={center}
           zoom={zoom}
         >
           {showNetworks && (
@@ -130,6 +130,7 @@ function MapPage() {
               networks={networks}
               handleExploreStations={handleExploreStations}
               setZoom={setZoom}
+              setCenter={setCenter}
             />
           )}
           {showStations && <Stations stations={stations} />}

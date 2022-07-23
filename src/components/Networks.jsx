@@ -3,15 +3,14 @@ import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 import bikeService from "../services/bikeapi.js";
 
 function Networks(props) {
-  const { networks, handleExploreStations, setZoom } = props;
+  const { networks, handleExploreStations, setZoom, setCenter } = props;
 
-  const [clickedStation, setClickedStation] = useState(null);
+  const [clickedNetwork, setClickedNetwork] = useState(null);
 
   const getById = async (id) => {
     try {
       let response = await bikeService.getStations(id);
-      setClickedStation(response.data.network);
-      console.log(response.data);
+      setClickedNetwork(response.data.network);
     } catch (error) {
       alert(error);
     }
@@ -33,28 +32,33 @@ function Networks(props) {
                   lng: network.location.longitude,
                 }}
                 clusterer={clusterer}
-              ></Marker>
+              />
             ))
           }
         </MarkerClusterer>
       )}
-      {clickedStation && (
+      
+      {clickedNetwork && (
         <Marker>
           <InfoWindow
             position={{
-              lat: clickedStation.location.latitude,
-              lng: clickedStation.location.longitude,
+              lat: clickedNetwork.location.latitude,
+              lng: clickedNetwork.location.longitude,
             }}
           >
             <div>
               <h4>
-                <i>Network</i> {clickedStation.name}
+                <i>Network</i> {clickedNetwork.name}
               </h4>
 
               <button
                 onClick={() => {
-                  handleExploreStations(clickedStation.id);
+                  handleExploreStations(clickedNetwork.id);
                   setZoom(8);
+                  setCenter({
+                    lat: clickedNetwork.location.latitude,
+                    lng: clickedNetwork.location.longitude,
+                  });
                 }}
               >
                 Explore stations
