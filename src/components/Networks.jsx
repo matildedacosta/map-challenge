@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
+
 import bikeService from "../services/bikeapi.js";
 
 function Networks(props) {
@@ -37,7 +38,7 @@ function Networks(props) {
           }
         </MarkerClusterer>
       )}
-      
+
       {clickedNetwork && (
         <Marker>
           <InfoWindow
@@ -47,21 +48,22 @@ function Networks(props) {
             }}
           >
             <div>
-              <h4>
-                <i>Network</i> {clickedNetwork.name}
-              </h4>
-
+              <h4>{clickedNetwork.name}</h4>
+              <h6>
+                {clickedNetwork.location.city},{clickedNetwork.location.country}
+              </h6>
               <button
+                className="info-button"
                 onClick={() => {
                   handleExploreStations(clickedNetwork.id);
-                  setZoom(8);
+                  setZoom(10);
                   setCenter({
                     lat: clickedNetwork.location.latitude,
                     lng: clickedNetwork.location.longitude,
                   });
                 }}
               >
-                Explore stations
+                View stations
               </button>
             </div>
           </InfoWindow>

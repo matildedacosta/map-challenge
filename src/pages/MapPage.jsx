@@ -12,8 +12,8 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 const MapsCSS = styled.main`
   * {
-    margin: 0;
-    padding: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
   width: 100vw;
@@ -27,36 +27,59 @@ const MapsCSS = styled.main`
   background-size: cover;
 
   h1 {
-    margin: 2rem 0 1rem;
-    color: blue;
+    margin: 1rem 0;
     font-size: 3rem;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #008cff;
+    color: #77d64b;
   }
 
   .button {
-    margin: 1rem;
+    margin-bottom: 1rem;
     border-radius: 5px;
     padding: 0.4rem;
-    background-color: green;
+    background-color: #77d64b;
     color: white;
     border: none;
     font-size: 0.9rem;
   }
 
   .button:hover {
-    background-color: blue;
+    background-color: #008cff;
     color: white;
+  }
+
+  .info-button {
+    margin-top: 0.5rem;
+    border-radius: 5px;
+    padding: 0.2rem;
+    background-color: #008cff;
+    color: white;
+    border: none;
+    font-size: 0.5rem;
+  }
+
+  .info-button:hover {
+    background-color: #77d64b;
+  }
+
+  .station-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 `;
 
 function MapPage() {
   /* STATES */
   //INFORMATION RELATED TO MAP
+  const startCenter = { lat: 38.732716, lng: -9.151577 };
   const [zoom, setZoom] = useState(5);
-  const [center, setCenter] = useState({ lat: 38.732716, lng: -9.151577 });
+  const [center, setCenter] = useState(startCenter);
+
   //SAVING INFORMATION FROM API
-  const [countries, setCountries] = useState([]);
   const [networks, setNetworks] = useState([]);
   const [stations, setStations] = useState([]);
+
   //TOGGLE FOR DIFFERENT LAYERS
   const [showNetworks, setShowNetworks] = useState(false);
   const [showStations, setShowStations] = useState(false);
@@ -75,7 +98,6 @@ function MapPage() {
       setShowNetworks(true);
     } catch (error) {
       alert(error);
-      console.log(error);
     }
   };
 
@@ -90,7 +112,6 @@ function MapPage() {
       setStations(response.data.network.stations);
     } catch (error) {
       alert(error);
-      console.log(error);
     }
   };
 
@@ -103,24 +124,23 @@ function MapPage() {
   return (
     <MapsCSS>
       <h1>Welcome to the Bike Map</h1>
-      {showStations && (
-        <button
-          className="button"
-          onClick={() => {
-            setShowStations(false);
-            setShowNetworks(true);
-            setZoom(5);
-          }}
-        >
-          See Networks
-        </button>
-      )}
+      <button
+        className="button"
+        onClick={() => {
+          setShowStations(false);
+          setShowNetworks(true);
+          setZoom(5);
+          setCenter(startCenter);
+        }}
+      >
+        See Networks
+      </button>
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={{
             width: "70vw",
             height: "70vh",
-            border: "1px solid blue",
+            border: "1px solid #93D2A4",
           }}
           center={center}
           zoom={zoom}

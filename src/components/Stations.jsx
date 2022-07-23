@@ -7,7 +7,7 @@ function Stations(props) {
   const [clickedStation, setClickedStation] = useState(null);
 
   return (
-    <div>
+    <>
       {stations && (
         <MarkerClusterer>
           {(clusterer) =>
@@ -36,7 +36,7 @@ function Stations(props) {
               lng: clickedStation.longitude,
             }}
           >
-            <div>
+            <div className="station-info">
               <h4>{clickedStation.name}</h4>
               <p>
                 <b>Free bikes: </b>
@@ -49,7 +49,7 @@ function Stations(props) {
           </InfoWindow>
         </Marker>
       )}
-    </div>
+    </>
   );
 }
 
