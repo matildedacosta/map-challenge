@@ -77,8 +77,10 @@ function MapPage() {
   const [center, setCenter] = useState(startCenter);
 
   //SAVING INFORMATION FROM API
+  const [countries, setCountries] = useState({});
   const [networks, setNetworks] = useState([]);
   const [stations, setStations] = useState([]);
+  const [oneNetwork, setOneNetwork] = useState([]);
 
   //TOGGLE FOR DIFFERENT LAYERS
   const [showNetworks, setShowNetworks] = useState(false);
@@ -101,8 +103,33 @@ function MapPage() {
     }
   };
 
+  const getCountries = async () => {
+    await getAllNetworks();
+    const countries = {};
+    networks.forEach((network) => {
+      const { country } = network.location;
+      if (!countries[network.location.country]) {
+        countries[country] = {
+          code: country,
+          networks: [network],
+        };
+      } else {
+        countries[country].networks = [...countries[country].networks, network];
+      }
+    });
+    setCountries(countries);
+    //console.log(countries);
+    return Object.values(countries);
+  };
+
   useEffect(() => {
     getAllNetworks();
+    /* const initialize = async () => {
+      const response = await getAllNetworks();
+      setCountries(getCountries(response));
+    };
+
+    initialize(); */
   }, []);
 
   /* STATIONS */
@@ -148,12 +175,15 @@ function MapPage() {
           {showNetworks && (
             <Networks
               networks={networks}
+              setOneNetwork={setOneNetwork}
               handleExploreStations={handleExploreStations}
               setZoom={setZoom}
               setCenter={setCenter}
             />
           )}
-          {showStations && <Stations stations={stations} />}
+          {showStations && (
+            <Stations stations={stations} oneNetwork={oneNetwork} />
+          )}
         </GoogleMap>
       ) : (
         <>

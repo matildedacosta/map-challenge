@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 
 function Stations(props) {
-  const { stations } = props;
+  const { stations, oneNetwork } = props;
 
   const [clickedStation, setClickedStation] = useState(null);
 
@@ -37,6 +37,17 @@ function Stations(props) {
             }}
           >
             <div className="station-info">
+              <h5>
+                <i>{oneNetwork.name}</i>
+              </h5>
+              <h5>
+                <i>
+                  📍 {oneNetwork.location.city},{oneNetwork.location.country}
+                </i>
+              </h5>
+              <br />
+              <hr />
+              <br />
               <h4>{clickedStation.name}</h4>
               <p>
                 <b>Free bikes: </b>

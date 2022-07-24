@@ -4,7 +4,8 @@ import { Marker, MarkerClusterer, InfoWindow } from "@react-google-maps/api";
 import bikeService from "../services/bikeapi.js";
 
 function Networks(props) {
-  const { networks, handleExploreStations, setZoom, setCenter } = props;
+  const { networks, setOneNetwork, handleExploreStations, setZoom, setCenter } =
+    props;
 
   const [clickedNetwork, setClickedNetwork] = useState(null);
 
@@ -26,6 +27,7 @@ function Networks(props) {
               <Marker
                 onClick={() => {
                   getById(network.id);
+                  setOneNetwork(network);
                 }}
                 key={network.id}
                 position={{
@@ -50,7 +52,8 @@ function Networks(props) {
             <div>
               <h4>{clickedNetwork.name}</h4>
               <h6>
-                {clickedNetwork.location.city},{clickedNetwork.location.country}
+                📍 {clickedNetwork.location.city},
+                {clickedNetwork.location.country}
               </h6>
               <button
                 className="info-button"
